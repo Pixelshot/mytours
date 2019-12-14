@@ -2,7 +2,7 @@
   "name": "mytours",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/Pixelshot/mytours/issues"
   },
-  "homepage": "https://github.com/Pixelshot/mytours#readme"
+  "homepage": "https://github.com/Pixelshot/mytours#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
