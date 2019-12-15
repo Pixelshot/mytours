@@ -78,6 +78,26 @@ app.post('/api/v1/tours', (req, res) => {
   );
 });
 
+//================================= Patch Tour List =======================================
+// Since we're gonna use mongoose for mongoDB for the real CRUD, we're just gonna insert a placehloder for patch
+app.patch('/api/v1/tours/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+
+  if (id > tours.length) {
+    return res.status(404).json({
+      status: 'fail',
+      message: 'Gator never been about that 🐊'
+    });
+  }
+
+  res.status(200).json({
+    status: 'sucess',
+    data: {
+      tour: 'Updated tour right here'
+    }
+  });
+});
+
 // ======================================= PORT ==========================================
 const port = 3000;
 app.listen(port, () => {
