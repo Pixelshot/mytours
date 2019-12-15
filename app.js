@@ -10,6 +10,11 @@ const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
 );
 
+// =======================================================================================
+//                                         CRUD
+// =======================================================================================
+
+// ================================= Get Tour List =======================================
 app.get('/api/v1/tours', (req, res) => {
   res.status(200).json({
     status: 'success',
@@ -20,6 +25,34 @@ app.get('/api/v1/tours', (req, res) => {
   });
 });
 
+// ================================= Get Single List =======================================
+app.get('/api/v1/tours/:id', (req, res) => {
+  console.log(req.params);
+  // variables we get from :id is stored in params
+
+  // Since id has been stringified, we can convert it back to integer by muiltiplying like below
+  // "string" * integer = integer
+  const id = req.params.id * 1;
+  const tour = tours.find(el => el.id === id);
+
+  // Create an error message if id is not found
+  // Checking via length: ```if (id > tours.length)``` works as well
+  if (!tour) {
+    res.status(404).json({
+      status: 'fail',
+      message: 'Invalid ID'
+    });
+  }
+
+  res.status(200).json({
+    status: 'sucess',
+    data: {
+      tour
+    }
+  });
+});
+
+//================================= Post New Tour List ====================================
 app.post('/api/v1/tours', (req, res) => {
   // Normally creation of an ID is handled via server-side but since a db has not been implemented, we're doing it here via client-side.
   const newId = tours[tours.length - 1].id + 1;
@@ -45,6 +78,12 @@ app.post('/api/v1/tours', (req, res) => {
   );
 });
 
+// ======================================= PORT ==========================================
+const port = 3000;
+app.listen(port, () => {
+  console.log(`App is running on port ${port}...`);
+});
+
 // =================================================================================
 // app.get('/', (req, res) => {
 //   res.status(200).json({ message: 'Hello from server side!', app: 'Mytours' });
@@ -54,9 +93,3 @@ app.post('/api/v1/tours', (req, res) => {
 //   res.send('You can post to this endpoint..😼');
 // });
 // =================================================================================
-
-// PORT
-const port = 3000;
-app.listen(port, () => {
-  console.log(`App is running on port ${port}...`);
-});
