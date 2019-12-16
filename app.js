@@ -15,7 +15,7 @@ const tours = JSON.parse(
 // =======================================================================================
 
 // ================================= Get Tour List =======================================
-app.get('/api/v1/tours', (req, res) => {
+const getAllTours = (req, res) => {
   res.status(200).json({
     status: 'success',
     results: tours.length,
@@ -23,10 +23,11 @@ app.get('/api/v1/tours', (req, res) => {
       tours
     }
   });
-});
-
+};
+// =======================================================================================
 // ================================= Get Single List =======================================
-app.get('/api/v1/tours/:id', (req, res) => {
+
+const getTour = (req, res) => {
   console.log(req.params);
   // variables we get from :id is stored in params
 
@@ -50,10 +51,10 @@ app.get('/api/v1/tours/:id', (req, res) => {
       tour
     }
   });
-});
-
-//================================= Post New Tour List ====================================
-app.post('/api/v1/tours', (req, res) => {
+};
+// =======================================================================================
+// ================================= Post New Tour List ==================================
+const createTour = (req, res) => {
   // Normally creation of an ID is handled via server-side but since a db has not been implemented, we're doing it here via client-side.
   const newId = tours[tours.length - 1].id + 1;
 
@@ -76,11 +77,11 @@ app.post('/api/v1/tours', (req, res) => {
       });
     }
   );
-});
-
-//================================= Patch Tour List =======================================
+};
+// =======================================================================================
+// ================================= Patch Tour List ======================================
 // Since we're gonna use mongoose for mongoDB for the real CRUD, we're just gonna insert a placehloder for patch
-app.patch('/api/v1/tours/:id', (req, res) => {
+const updateTour = (req, res) => {
   const id = parseInt(req.params.id);
 
   if (id > tours.length) {
@@ -96,11 +97,11 @@ app.patch('/api/v1/tours/:id', (req, res) => {
       tour: 'Updated tour right here'
     }
   });
-});
-
-//================================= Delete Tour List =======================================
+};
+// =======================================================================================
+// ================================ Delete Tour List =====================================
 // Since we're gonna use mongoose for mongoDB for the real CRUD, we're just gonna insert a placehloder for patch
-app.delete('/api/v1/tours/:id', (req, res) => {
+const deleteTour = (req, res) => {
   const id = parseInt(req.params.id);
 
   if (id > tours.length) {
@@ -109,20 +110,32 @@ app.delete('/api/v1/tours/:id', (req, res) => {
       data: null
     });
   }
-});
+};
+// =======================================================================================
+// ==================================== ROUTES ===========================================
 
+// With id
+app
+  .route('/api/v1/tours/:id')
+  .get(getTour)
+  .patch(updateTour)
+  .delete(deleteTour);
+//Without id
+app
+  .route('/api/v1/tours')
+  .get(getAllTours)
+  .post(createTour);
+
+// =======================================================================================
 // ======================================= PORT ==========================================
 const port = 3000;
 app.listen(port, () => {
   console.log(`App is running on port ${port}...`);
 });
-
-// =================================================================================
-// app.get('/', (req, res) => {
-//   res.status(200).json({ message: 'Hello from server side!', app: 'Mytours' });
-// });
-
-// app.post('/', (req, res) => {
-//   res.send('You can post to this endpoint..😼');
-// });
-// =================================================================================
+// =======================================================================================
+// =============================== Original Routes =======================================
+// app.get('/api/v1/tours', getAllTours);
+// app.post('/api/v1/tours', createTour);
+// app.get('/api/v1/tours/:id', getTour);
+// app.patch('/api/v1/tours/:id', updateTour);
+// app.delete('/api/v1/tours/:id', deleteTour);
