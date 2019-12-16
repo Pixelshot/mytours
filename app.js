@@ -98,6 +98,19 @@ app.patch('/api/v1/tours/:id', (req, res) => {
   });
 });
 
+//================================= Delete Tour List =======================================
+// Since we're gonna use mongoose for mongoDB for the real CRUD, we're just gonna insert a placehloder for patch
+app.delete('/api/v1/tours/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+
+  if (id > tours.length) {
+    return res.status(204).json({
+      status: 'successfully deleted',
+      data: null
+    });
+  }
+});
+
 // ======================================= PORT ==========================================
 const port = 3000;
 app.listen(port, () => {
