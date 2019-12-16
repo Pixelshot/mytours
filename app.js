@@ -1,10 +1,23 @@
 const fs = require('fs');
 const express = require('express');
+const morgan = require('morgan');
 
 const app = express();
 
-// middleware function that can modify incoming request data
+// third party middlewares function that can modify incoming request data
+app.use(morgan('dev'));
 app.use(express.json());
+
+// own middleware function
+app.use((req, res, next) => {
+  console.log('Hello from middleware 👋');
+  next();
+});
+
+app.use((req, res, next) => {
+  req.requestTime = new Date().toISOString();
+  next();
+});
 
 const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
@@ -16,8 +29,11 @@ const tours = JSON.parse(
 
 // ================================= Get Tour List =======================================
 const getAllTours = (req, res) => {
+  console.log(req.requestTime);
+
   res.status(200).json({
     status: 'success',
+    requestedAt: req.requestTime,
     results: tours.length,
     data: {
       tours
@@ -39,7 +55,7 @@ const getTour = (req, res) => {
   // Create an error message if id is not found
   // Checking via length: ```if (id > tours.length)``` works as well
   if (!tour) {
-    res.status(404).json({
+    return res.status(404).json({
       status: 'fail',
       message: 'Invalid ID'
     });
