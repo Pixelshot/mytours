@@ -176,33 +176,38 @@ const deleteUser = (req, res) => {
 //                                      ROUTES
 // ========================================================================================
 // === === === === Tour === === === === ===
+const tourRouter = express.Router();
+//Without id
+tourRouter
+  .route('/')
+  .get(getAllTours)
+  .post(createTour);
+
 // With id
-app
-  .route('/api/v1/tours/:id')
+tourRouter
+  .route('/:id')
   .get(getTour)
   .patch(updateTour)
   .delete(deleteTour);
 
-//Without id
-app
-  .route('/api/v1/tours')
-  .get(getAllTours)
-  .post(createTour);
-
 // === === === === User === === === === ===
+const userRouter = express.Router();
+// Without id
+userRouter
+  .route('/')
+  .get(getAllUsers)
+  .post(createUser);
+
 // With id
-app
-  .route('/api/v1/users/:id')
+userRouter
+  .route('/:id')
   .get(getUser)
   .patch(updateUser)
   .delete(deleteUser);
 
-// Without id
-app
-  .route('/api/v1/users')
-  .get(getAllUsers)
-  .post(createUser);
-
+// === === === === Mounting Routers === === === === ===
+app.use('/api/v1/tours', tourRouter);
+app.use('/api/v1/users', userRouter);
 // =======================================================================================
 //                                       PORT
 // =======================================================================================
