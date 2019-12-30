@@ -4,6 +4,20 @@ const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
 );
 
+// param middleware has a fourth argument = value(val)
+// must always call next() on a middleware or else code will get stuck
+exports.checkID = (req, res, next, val) => {
+  console.log(`Tour id is: ${val}`);
+
+  if (parseInt(req.params.id) > tours.length) {
+    return res.status(404).json({
+      status: 'fail',
+      message: 'Invalid ID'
+    });
+  }
+  next();
+};
+
 // ================================= Get Tour List =======================================
 exports.getAllTours = (req, res) => {
   console.log(req.requestTime);
@@ -27,15 +41,6 @@ exports.getTour = (req, res) => {
   // "string" * integer = integer
   const id = req.params.id * 1;
   const tour = tours.find(el => el.id === id);
-
-  // Create an error message if id is not found
-  // Checking via length: ```if (id > tours.length)``` works as well
-  if (!tour) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'Invalid ID'
-    });
-  }
 
   res.status(200).json({
     status: 'sucess',
@@ -74,15 +79,6 @@ exports.createTour = (req, res) => {
 // ================================= Patch Tour List ======================================
 // Since we're gonna use mongoose for mongoDB for the real CRUD, we're just gonna insert a placehloder for patch
 exports.updateTour = (req, res) => {
-  const id = parseInt(req.params.id);
-
-  if (id > tours.length) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'Gator never been about that 🐊'
-    });
-  }
-
   res.status(200).json({
     status: 'sucess',
     data: {
