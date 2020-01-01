@@ -1,8 +1,8 @@
-// dotenv configuration
 const dotenv = require('dotenv');
-dotenv.config({ path: './config.env' });
-
 const app = require('./app');
+
+// dotenv configuration
+dotenv.config({ path: './config.env' });
 
 // =======================================================================================
 //                                       PORT
