@@ -9,7 +9,7 @@ const tours = JSON.parse(
 exports.checkID = (req, res, next, val) => {
   console.log(`Tour id is: ${val}`);
 
-  if (parseInt(req.params.id) > tours.length) {
+  if (Number(req.params.id) > tours.length) {
     return res.status(404).json({
       status: 'fail',
       message: 'Invalid ID'
@@ -70,7 +70,7 @@ exports.createTour = (req, res) => {
   const newId = tours[tours.length - 1].id + 1;
 
   // Object.assign combines two objects into one
-  const newTour = Object.assign({ id: newId }, req.body);
+  const newTour = { id: newId, ...req.body };
 
   tours.push(newTour);
 
@@ -104,7 +104,7 @@ exports.updateTour = (req, res) => {
 // ================================ Delete Tour List =====================================
 // Since we're gonna use mongoose for mongoDB for the real CRUD, we're just gonna insert a placehloder for patch
 exports.deleteTour = (req, res) => {
-  const id = parseInt(req.params.id);
+  const id = Number(req.params.id);
 
   if (id > tours.length) {
     return res.status(204).json({
