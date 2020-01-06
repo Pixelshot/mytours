@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const app = require('./app');
+
 // dotenv configuration
 dotenv.config({ path: './config.env' });
 
@@ -17,7 +19,31 @@ mongoose
   })
   .then(() => console.log('DB connection successful!'));
 
-const app = require('./app');
+// =======================================================================================
+//                                      SCHEMA
+// =======================================================================================
+
+const tourSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: [true, 'A tour must have a name.'],
+    unique: true
+  },
+  rating: {
+    type: Number,
+    default: 4.5
+  },
+  price: {
+    type: Number,
+    required: [true, 'A tour must have a price.']
+  }
+});
+
+// =======================================================================================
+//                                      MODEL
+// =======================================================================================
+
+const Tour = mongoose.model('Tour', tourSchema);
 
 // =======================================================================================
 //                                       PORT
