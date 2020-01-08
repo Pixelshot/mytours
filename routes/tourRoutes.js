@@ -4,7 +4,7 @@ const tourController = require('./../controllers/tourController');
 // it's considered as a convention to call it router
 const router = express.Router();
 
-router.param('id', tourController.checkID);
+// router.param('id', tourController.checkID);
 
 // Create a checkBody middleware
 // Check if a body contains the name and price property
