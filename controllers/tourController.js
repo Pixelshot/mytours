@@ -1,35 +1,43 @@
 const Tour = require('./../models/tourModel');
 
 // ================================= Get Tour List =======================================
-exports.getAllTours = (req, res) => {
-  console.log(req.requestTime);
+exports.getAllTours = async (req, res) => {
+  try {
+    const tours = await Tour.find();
 
-  res.status(200).json({
-    status: 'success',
-    requestedAt: req.requestTime
-    // results: tours.length,
-    // data: {
-    //   tours
-    // }
-  });
+    res.status(200).json({
+      status: 'success',
+      results: tours.length,
+      data: {
+        tours
+      }
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'Fail',
+      message: err
+    });
+  }
 };
 // =======================================================================================
 // ================================= Get Single List =====================================
-exports.getTour = (req, res) => {
-  console.log(req.params);
-  // variables we get from :id is stored in params
+exports.getTour = async (req, res) => {
+  try {
+    const tour = await Tour.findById(req.params.id);
+    // Tour.findOne({ _id: req.params.id }) - Works the same as Tour.findById(req.params.id)
 
-  // Since id has been stringified, we can convert it back to integer by muiltiplying like below
-  // "string" * integer = integer
-  const id = req.params.id * 1;
-  // const tour = tours.find(el => el.id === id);
-
-  // res.status(200).json({
-  //   status: 'sucess',
-  //   data: {
-  //     tour
-  //   }
-  // });
+    res.status(200).json({
+      status: 'success',
+      data: {
+        tour
+      }
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'Fail',
+      message: err
+    });
+  }
 };
 // =======================================================================================
 // ================================= Post New Tour List ==================================
