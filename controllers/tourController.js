@@ -66,13 +66,24 @@ exports.createTour = async (req, res) => {
 // ========================================================================================
 // ================================= Patch Tour List ======================================
 // Since we're gonna use mongoose for mongoDB for the real CRUD, we're just gonna insert a placehloder for patch
-exports.updateTour = (req, res) => {
-  res.status(200).json({
-    status: 'sucess',
-    data: {
-      tour: 'Updated tour right here'
-    }
-  });
+exports.updateTour = async (req, res) => {
+  try {
+    const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
+      new: true, // to ensure the updated data always return
+      runValidators: true
+    });
+    res.status(200).json({
+      status: 'success',
+      data: {
+        tour
+      }
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'Fail',
+      message: err
+    });
+  }
 };
 // =======================================================================================
 // ================================ Delete Tour List =====================================
