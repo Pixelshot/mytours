@@ -88,9 +88,18 @@ exports.updateTour = async (req, res) => {
 // =======================================================================================
 // ================================ Delete Tour List =====================================
 // Since we're gonna use mongoose for mongoDB for the real CRUD, we're just gonna insert a placehloder for patch
-exports.deleteTour = (req, res) => {
-  return res.status(204).json({
-    status: 'successfully deleted',
-    data: null
-  });
+exports.deleteTour = async (req, res) => {
+  try {
+    // Character.deleteOne({ name: 'Eddard Stark' }, function (err) {});
+    await Tour.findByIdAndDelete(req.params.id);
+    res.status(204).json({
+      status: 'successfully deleted',
+      data: null
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'Fail',
+      message: err
+    });
+  }
 };
