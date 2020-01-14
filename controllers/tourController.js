@@ -65,7 +65,6 @@ exports.createTour = async (req, res) => {
 };
 // ========================================================================================
 // ================================= Patch Tour List ======================================
-// Since we're gonna use mongoose for mongoDB for the real CRUD, we're just gonna insert a placehloder for patch
 exports.updateTour = async (req, res) => {
   try {
     const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
@@ -87,7 +86,6 @@ exports.updateTour = async (req, res) => {
 };
 // =======================================================================================
 // ================================ Delete Tour List =====================================
-// Since we're gonna use mongoose for mongoDB for the real CRUD, we're just gonna insert a placehloder for patch
 exports.deleteTour = async (req, res) => {
   try {
     // Character.deleteOne({ name: 'Eddard Stark' }, function (err) {});
