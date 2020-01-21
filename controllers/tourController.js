@@ -3,8 +3,26 @@ const Tour = require('./../models/tourModel');
 // ================================= Get Tour List =======================================
 exports.getAllTours = async (req, res) => {
   try {
-    const tours = await Tour.find();
+    // BUILD QUERY
+    // Things we want to remove from querying
+    const queryObj = { ...req.query };
+    const excludedFields = ['page', 'sort', 'limit', 'field'];
+    excludedFields.forEach(el => delete queryObj[el]);
 
+    // Normal way of querying
+    const query = Tour.find(queryObj);
+
+    // // Mongoose way of querying
+    // const query = await Tour.find()
+    //   .where('duration')
+    //   .equals(5)
+    //   .where('difficulty')
+    //   .equals('easy');
+
+    // EXECUTE QUERY
+    const tours = await query;
+
+    // SEND RESPONSE
     res.status(200).json({
       status: 'success',
       results: tours.length,
