@@ -4,13 +4,22 @@ const Tour = require('./../models/tourModel');
 exports.getAllTours = async (req, res) => {
   try {
     // BUILD QUERY
+
+    // Filtering
     // Things we want to remove from querying
     const queryObj = { ...req.query };
     const excludedFields = ['page', 'sort', 'limit', 'field'];
     excludedFields.forEach(el => delete queryObj[el]);
 
-    // Normal way of querying
-    const query = Tour.find(queryObj);
+    // Advanced Filtering
+    let queryStr = JSON.stringify(queryObj);
+    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
+    console.log(JSON.parse(queryStr));
+
+    const query = Tour.find(JSON.parse(queryStr));
+
+    // EXECUTE QUERY
+    const tours = await query;
 
     // // Mongoose way of querying
     // const query = await Tour.find()
@@ -18,9 +27,6 @@ exports.getAllTours = async (req, res) => {
     //   .equals(5)
     //   .where('difficulty')
     //   .equals('easy');
-
-    // EXECUTE QUERY
-    const tours = await query;
 
     // SEND RESPONSE
     res.status(200).json({
