@@ -32,15 +32,25 @@ exports.getAllTours = async (req, res) => {
     } else {
       query = query.select('-__v'); // exclude only this field
     }
+
+    // Pagination
+    // setting up default query for pagination
+    const page = req.query.page * 1 || 1;
+    const limit = req.query.limit * 1 || 100;
+    const skip = (page - 1) * limit;
+
+    // page=2&limit=10, page 1: 1-10, page 2: 11-20, page 3: 21-30, etc..
+    // to get to page 2(with 10 results per page), we use skip(10) before we start querying.
+    query = query.skip(skip).limit(limit);
+
+    // if query page is more than result.
+    if (req.query.page) {
+      const numTours = await Tour.countDocuments();
+      if (skip >= numTours) throw new Error('This page does not exists');
+    }
+
     // EXECUTE QUERY
     const tours = await query;
-
-    // // Mongoose way of querying
-    // const query = await Tour.find()
-    //   .where('duration')
-    //   .equals(5)
-    //   .where('difficulty')
-    //   .equals('easy');
 
     // SEND RESPONSE
     res.status(200).json({
