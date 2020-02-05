@@ -8,7 +8,7 @@ exports.getAllTours = async (req, res) => {
     // Filtering
     // Things we want to remove from querying
     const queryObj = { ...req.query };
-    const excludedFields = ['page', 'sort', 'limit', 'field'];
+    const excludedFields = ['page', 'sort', 'limit', 'fields'];
     excludedFields.forEach(el => delete queryObj[el]);
 
     // Advanced Filtering
@@ -25,6 +25,13 @@ exports.getAllTours = async (req, res) => {
       query = query.sort('-createdAt');
     }
 
+    // Field limiting
+    if (req.query.fields) {
+      const fields = req.query.fields.split(',').join(' ');
+      query = query.select(fields);
+    } else {
+      query = query.select('-__v'); // exclude only this field
+    }
     // EXECUTE QUERY
     const tours = await query;
 
