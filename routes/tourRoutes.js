@@ -14,6 +14,9 @@ router
 // If not, send back 400(bad request)
 // Add it to the post handler stack
 
+// Aggregation Pipeline
+router.route('/tour-stats').get(tourController.getTourStats);
+
 router
   .route('/')
   .get(tourController.getAllTours)
