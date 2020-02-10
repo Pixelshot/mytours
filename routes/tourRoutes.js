@@ -17,6 +17,9 @@ router
 // Aggregation Pipeline
 router.route('/tour-stats').get(tourController.getTourStats);
 
+// Creating a monthly plan to find out which month is the busiest for the company
+router.route('/monthly-plan/:year').get(tourController.getMonthlyPlan);
+
 router
   .route('/')
   .get(tourController.getAllTours)
