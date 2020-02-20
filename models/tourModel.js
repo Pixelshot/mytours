@@ -89,10 +89,10 @@ tourSchema.pre('save', function(next) {
 
 // QUERY MIDDLEWARE
 
-// secretTour appears in general query
+// secretTour appears in public query
 // tourSchema.pre('find', function(next) {
 
-// secretTour does not appear in general query
+// secretTour does not appear in public query
 tourSchema.pre(/^find/, function(next) {
   this.find({ secretTour: { $ne: true } });
 
@@ -102,7 +102,14 @@ tourSchema.pre(/^find/, function(next) {
 
 tourSchema.post(/^find/, function(docs, next) {
   console.log(`Query took ${Date.now() - this.start} miliseconds!`);
-  console.log(docs);
+  next();
+});
+
+// AGGREGATION MIDDLEWARE
+tourSchema.pre('aggregate', function(next) {
+  this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
+
+  console.log(this.pipeline());
   next();
 });
 
